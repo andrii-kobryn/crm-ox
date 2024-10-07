@@ -8,7 +8,7 @@ OX Tests task
 
 docker-compose -f docker-compose-local.yml up --build
 
-Для запуску Application в Edit Configuration потрібно зробити наступну Modify Options -> Add VM options і в поле VM options ввести цю строку:
+Для запуску Application в Edit Configuration потрібно зробити наступне Modify Options -> Add VM options і в поле VM options ввести цю строку:
 
 -Dspring.profiles.active=dev
 
