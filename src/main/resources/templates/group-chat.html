@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Груповий чат</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="https://cdn.jsdelivr.net/npm/sockjs-client/dist/sockjs.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/stompjs/lib/stomp.min.js"></script>
+</head>
+<body>
+<h1>Груповий чат</h1>
+
+<div id="chat">
+  <div id="messages"></div>
+  <input type="text" id="messageInput" placeholder="Напишіть ваше повідомлення..." />
+  <button id="sendButton">Відправити</button>
+</div>
+<a th:href="@{/home}" class="btn btn-secondary">На головну</a>
+<script>
+const stompClient = Stomp.over(new SockJS('/ws'));
+
+stompClient.connect({}, function (frame) {
+    console.log('Connected: ' + frame);
+
+   stompClient.subscribe('/topic/messages', function (message) {
+    console.log("Message received from WebSocket:", message.body);
+    const msg = JSON.parse(message.body);
+    displayMessage(msg);
+});
+
+    document.getElementById('sendButton').addEventListener('click', function() {
+        const messageInput = document.getElementById('messageInput');
+        const message = messageInput.value;
+
+        sendMessage(message);
+        messageInput.value = '';
+    });
+});
+
+function sendMessage(message) {
+    const msg = {
+        content: message,
+        sender: 'your_username',
+        timestamp: new Date().toISOString()
+    };
+    console.log("Sending message:", JSON.stringify(msg));
+    stompClient.send("/app/sendMessage", {}, JSON.stringify(msg));
+}
+
+function displayMessage(msg) {
+    console.log("Displaying message:", msg);
+
+    const messagesDiv = document.getElementById('messages');
+
+    if (!messagesDiv) {
+        console.error("Container for messages not found!");
+        return;
+    }
+
+    const messageElement = document.createElement('div');
+    messageElement.classList.add('message');
+    messageElement.innerHTML = `
+        <span class="author">${msg.sender}</span>:
+        <span class="content">${msg.content}</span>
+        <span class="timestamp">(${new Date(msg.timestamp).toLocaleString()})</span>
+    `;
+
+    messagesDiv.appendChild(messageElement);
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+}
+
+</script>
+<style>
+  #chat {
+      border: 1px solid #ccc;
+      padding: 10px;
+      max-width: 600px;
+      margin: auto;
+  }
+
+  #messages {
+      height: 300px;
+      overflow-y: scroll;
+      border: 1px solid #ccc;
+      margin-bottom: 10px;
+      padding: 5px;
+  }
+
+  .message {
+      margin: 5px 0;
+  }
+
+  .message .author {
+      font-weight: bold;
+  }
+
+  .message .timestamp {
+      font-size: 0.8em;
+      color: gray;
+  }
+
+  #messageInput {
+      width: 80%;
+      padding: 10px;
+  }
+
+  #sendButton {
+      padding: 10px;
+  }
+</style>
+</body>
+</html>

@@ -1,0 +1,62 @@
+<div id="taskStatusNotification-panel" style="position: fixed; top: 0; right: 0; z-index: 1000;">
+  <div id="notifications-list"></div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.5.0/sockjs.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+<script>
+  var stompClient = null;
+
+  function connect() {
+    var socket = new SockJS('/ws');
+    stompClient = Stomp.over(socket);
+    stompClient.connect({}, function (frame) {
+        console.log('Connected: ' + frame);
+
+        stompClient.subscribe('/topic/tasks', function (message) {
+            showNotification(JSON.parse(message.body).message, "status");
+        });
+
+        stompClient.subscribe('/topic/deadlines', function (message) {
+            showNotification(message.body, "deadline");
+        });
+    });
+  }
+
+  function showNotification(message, type) {
+    const notificationItem = document.createElement("div");
+    notificationItem.innerText = message;
+    notificationItem.classList.add("taskStatusNotification-item");
+
+    if (type === "deadline") {
+      notificationItem.style.backgroundColor = "#f8d7da";в
+      notificationItem.style.color = "#721c24";
+    }
+
+    document.getElementById("notifications-list").appendChild(notificationItem);
+
+    setTimeout(function() {
+      notificationItem.classList.add("fade-out");
+      setTimeout(() => {
+          notificationItem.remove();
+      }, 500);
+    }, 3000);
+  }
+
+  connect();
+</script>
+
+<style>
+  .taskStatusNotification-item {
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    transition: opacity 0.5s ease;
+  }
+
+  .taskStatusNotification-item.fade-out {
+    opacity: 0;
+  }
+</style>

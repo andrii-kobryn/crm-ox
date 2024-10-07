@@ -1,0 +1,42 @@
+version: '3.7'
+
+services:
+  postgres:
+    image: postgres:14
+    environment:
+      POSTGRES_DB: crm_dbt
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+    ports:
+      - "5432:5432"
+    networks:
+      - crm-network
+
+  redis:
+    image: redis:7
+    ports:
+      - "6379:6379"
+    networks:
+      - crm-network
+
+  crm:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8089:8089"
+    depends_on:
+      - postgres
+      - redis
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/crm_dbt
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+      SPRING_PROFILES_ACTIVE: docker  # Використовуйте профіль для Docker
+    networks:
+      - crm-network
+
+networks:
+  crm-network:

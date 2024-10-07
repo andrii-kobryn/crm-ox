@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Пошук клієнтів</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Пошук клієнтів</h1>
+  <form th:action="@{/clients/search}" method="get">
+    <div class="form-group">
+      <label for="companyName">Назва компанії:</label>
+      <input type="text" id="companyName" name="companyName" class="form-control" th:value="${companyName}">
+    </div>
+    <div class="form-group">
+      <label for="industry">Галузь:</label>
+      <input type="text" id="industry" name="industry" class="form-control" th:value="${industry}">
+    </div>
+    <div class="form-group">
+      <label for="address">Адреса:</label>
+      <input type="text" id="address" name="address" class="form-control" th:value="${address}">
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Шукати</button>
+  </form>
+  <a th:href="@{/home}" class="btn btn-secondary">На головну</a>
+
+  <h2>Результати пошуку</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Назва компанії</th>
+      <th>Галузь</th>
+      <th>Адреса</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+      <td th:text="${client.id}"></td>
+      <td>
+        <a th:href="@{/clients/{clientId}(clientId=${client.id})}" th:text="${client.companyName}"></a>
+      </td>
+      <td th:text="${client.industry}"></td>
+      <td th:text="${client.address}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

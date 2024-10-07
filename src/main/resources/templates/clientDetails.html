@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Деталі клієнта</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Деталі клієнта: <span th:text="${client.companyName}"></span></h1>
+
+  <h2>Інформація про клієнта</h2>
+  <table class="table">
+    <tr>
+      <th>Назва компанії:</th>
+      <td th:text="${client.companyName}"></td>
+    </tr>
+    <tr>
+      <th>Галузь:</th>
+      <td th:text="${client.industry}"></td>
+    </tr>
+    <tr>
+      <th>Адреса:</th>
+      <td th:text="${client.address}"></td>
+    </tr>
+  </table>
+
+  <h2>Контакти</h2>
+  <a th:href="@{/contacts/create(clientId=${client.id})}" class="btn btn-primary mb-3">Додати контакт</a>
+
+  <form th:action="@{/clients/{clientId}/contacts/search(clientId=${client.id})}" method="get">
+    <div class="form-group">
+      <label for="firstName">Ім'я:</label>
+      <input type="text" id="firstName" name="firstName" class="form-control" th:value="${firstName}"/>
+    </div>
+    <div class="form-group">
+      <label for="lastName">Прізвище:</label>
+      <input type="text" id="lastName" name="lastName" class="form-control" th:value="${lastName}"/>
+    </div>
+    <div class="form-group">
+      <label for="email">Email:</label>
+      <input type="text" id="email" name="email" class="form-control" th:value="${email}"/>
+    </div>
+    <button type="submit" class="btn btn-primary mt-3">Шукати</button>
+  </form>
+
+  <table class="table">
+    <thead>
+    <tr>
+      <th>Ім'я</th>
+      <th>Прізвище</th>
+      <th>Email</th>
+      <th>Дії</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="contact : ${contacts}">
+      <td th:text="${contact.firstName}"></td>
+      <td th:text="${contact.lastName}"></td>
+      <td th:text="${contact.email}"></td>
+      <td>
+        <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-info btn-sm">Переглянути</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>Завдання</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Опис</th>
+      <th>Статус</th>
+      <th>Дата завершення</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="task : ${tasks}">
+      <td th:text="${task.id}"></td>
+      <td th:text="${task.description}"></td>
+      <td th:text="${task.status}"></td>
+      <td th:text="${task.dueDate}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>Взаємодії</h2>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Тип</th>
+      <th>Повідомлення</th>
+      <th>Дата</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="interaction : ${interactions}">
+      <td th:text="${interaction.id}"></td>
+      <td th:text="${interaction.type.displayName}"></td>
+      <td th:text="${interaction.message}"></td>
+      <td th:text="${#temporals.format(interaction.date, 'yyyy-MM-dd HH:mm')}"></td>
+    </tr>
+    </tbody>
+  </table>
+
+  <h2>Експорт даних</h2>
+  <form th:action="@{/export/{clientId}/excel(clientId=${client.id})}" method="get">
+    <button type="submit">Скачати Excel</button>
+  </form>
+  <form th:action="@{/export/{clientId}/pdf(clientId=${client.id})}" method="get">
+    <button type="submit">Скачати PDF</button>
+  </form>
+
+  <a th:href="@{/clients}" class="btn btn-secondary">Назад до списку клієнтів</a>
+  <a th:href="@{/clients/edit/{id}(id=${client.id})}" class="btn btn-warning">Редагувати клієнта</a>
+  <form th:action="@{/clients/delete/{id}(id=${client.id})}" method="post" style="display:inline;">
+    <input type="hidden" name="_method" value="delete" />
+    <button type="submit" class="btn btn-danger" onclick="return confirm('Ви впевнені, що хочете видалити клієнта?')">Видалити</button>
+  </form>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

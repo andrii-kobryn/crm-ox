@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Редагування контакту</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Редагування контакту</h1>
+
+  <form th:action="@{/contacts/edit/{id}(id=${contact.id})}" th:object="${contact}" method="post">
+    <div class="mb-3">
+      <label for="firstName" class="form-label">Ім'я</label>
+      <input type="text" th:field="*{firstName}" class="form-control" id="firstName" placeholder="Введіть ім'я">
+    </div>
+
+    <div class="mb-3">
+      <label for="lastName" class="form-label">Прізвище</label>
+      <input type="text" th:field="*{lastName}" class="form-control" id="lastName" placeholder="Введіть прізвище">
+    </div>
+
+    <div class="mb-3">
+      <label for="email" class="form-label">Email</label>
+      <input type="email" th:field="*{email}" class="form-control" id="email" placeholder="Введіть email">
+    </div>
+
+    <div class="mb-3">
+      <label for="phone" class="form-label">Номер телефону</label>
+      <input type="text" th:field="*{phone}" class="form-control" id="phone" placeholder="Введіть номер телефону">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Оновити контакт</button>
+  </form>
+
+  <a th:href="@{/contacts/{id}(id=${contact.id})}" class="btn btn-secondary mt-3">Назад</a>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

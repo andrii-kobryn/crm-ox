@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Створити завдання</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Створити завдання</h1>
+  <form th:action="@{/tasks}" method="post">
+    <input type="hidden" name="contactId" th:value="${contactId}"/> <!-- ID контакту -->
+
+    <div class="mb-3">
+      <label for="description" class="form-label">Опис завдання</label>
+      <input type="text" id="description" name="description" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label for="status" class="form-label">Статус</label>
+      <select id="status" name="status" class="form-select" required>
+        <option th:each="status : ${statuses}"
+                th:value="${status.name()}"
+                th:text="${status.displayName}"></option>
+      </select>
+    </div>
+
+
+    <div class="mb-3">
+      <label for="dueDate" class="form-label">Дата завершення</label>
+      <input type="date" id="dueDate" name="dueDate" class="form-control" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Створити завдання</button>
+    <a th:href="@{/contacts/{id}(id=${contactId})}" class="btn btn-secondary">Скасувати</a>
+  </form>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Список клієнтів</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Список клієнтів</h1>
+  <table class="table">
+    <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ім'я</th>
+      <th>Дії</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="client : ${clients}">
+      <td th:text="${client.id}"></td>
+      <td th:text="${client.companyName}"></td>
+      <td>
+        <a th:href="@{/clients/{id}(id=${client.id})}" class="btn btn-primary">Переглянути</a>
+      </td>
+    </tr>
+    </tbody>
+  </table>
+  <a th:href="@{/clients/create}" class="btn btn-success">Створити</a>
+  <a th:href="@{/home}" class="btn btn-secondary">На головну</a>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

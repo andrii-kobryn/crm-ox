@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Створити клієнта</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.1.3/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container mt-5">
+  <h1>Створити нового клієнта</h1>
+  <form th:action="@{/clients/create}" th:object="${clientDTO}" method="post">
+    <div class="mb-3">
+      <label for="companyName" class="form-label">Назва компанії</label>
+      <input type="text" class="form-control" id="companyName" th:field="*{companyName}" required>
+    </div>
+    <div class="mb-3">
+      <label for="industry" class="form-label">Сфера діяльності</label>
+      <input type="text" class="form-control" id="industry" th:field="*{industry}" required>
+    </div>
+    <div class="mb-3">
+      <label for="address" class="form-label">Адреса</label>
+      <input type="text" class="form-control" id="address" th:field="*{address}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">Створити</button>
+    <a th:href="@{/clients}" class="btn btn-secondary">Назад до списку</a>
+  </form>
+</div>
+<div th:replace="notification.html"></div>
+</body>
+</html>

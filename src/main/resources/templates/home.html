@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Головна сторінка</title>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+<div class="container">
+  <h1>Ласкаво просимо до CRM системи!</h1>
+  <p>Це ваша домашня сторінка. Тут ви можете переглядати всі доступні функції.</p>
+
+  <h2>Навігація</h2>
+  <ul class="list-group">
+    <li class="list-group-item">
+      <a th:href="@{/clients}">Переглянути клієнтів</a>
+    </li>
+    <li class="list-group-item">
+      <a th:href="@{/clients/search}">Пошук клієнтів</a>
+    </li>
+    <li class="list-group-item">
+      <a th:href="@{/chat}">Груповий чат</a>
+    </li>
+
+  </ul>
+
+  <a id="logoutButton" th:href="@{/auth/logout}" class="btn btn-danger">Вихід</a>
+</div>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+<script>
+  function clearCookies() {
+      document.cookie = "jwt=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+      document.cookie = "JSESSIONID=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+  }
+
+  document.getElementById("logoutButton").onclick = function() {
+      clearCookies();
+  };
+</script>
+
+<div th:replace="notification.html"></div>
+</body>
+</html>
